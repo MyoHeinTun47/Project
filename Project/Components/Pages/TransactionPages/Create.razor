@@ -1,0 +1,62 @@
+﻿@page "/transactions/create"
+@using Microsoft.EntityFrameworkCore
+@using Project.Domain
+@inject IDbContextFactory<Project.Data.ProjectContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Create</PageTitle>
+
+<h1>Create</h1>
+
+<h2>Transaction</h2>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="Transaction" OnValidSubmit="AddTransaction" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" role="alert"/>
+            <div class="mb-3">
+                <span class="text-danger">*</span>
+                <label for="amount" class="form-label">Amount:</label> 
+                <InputNumber id="amount" @bind-Value="Transaction.Amount" class="form-control" aria-required="true"/> 
+                <ValidationMessage For="() => Transaction.Amount" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <span class="text-danger">*</span>
+                <label for="transactiondate" class="form-label">TransactionDate:</label> 
+                <InputDate id="transactiondate" @bind-Value="Transaction.TransactionDate" class="form-control" aria-required="true"/> 
+                <ValidationMessage For="() => Transaction.TransactionDate" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <span class="text-danger">*</span>
+                <label for="transactiontype" class="form-label">TransactionType:</label> 
+                <InputText id="transactiontype" @bind-Value="Transaction.TransactionType" class="form-control" aria-required="true"/> 
+                <ValidationMessage For="() => Transaction.TransactionType" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="description" class="form-label">Description:</label> 
+                <InputText id="description" @bind-Value="Transaction.Description" class="form-control" /> 
+                <ValidationMessage For="() => Transaction.Description" class="text-danger" /> 
+            </div>        
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/transactions">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    private Transaction Transaction { get; set; } = new();
+
+    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task AddTransaction()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Transaction.Add(Transaction);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/transactions");
+    }
+}

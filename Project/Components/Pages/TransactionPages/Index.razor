@@ -1,0 +1,39 @@
+﻿@page "/transactions"
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using Project.Domain
+@using Project.Data
+@implements IAsyncDisposable
+@inject IDbContextFactory<Project.Data.ProjectContext> DbFactory
+
+<PageTitle>Index</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <a href="transactions/create">Create New</a>
+</p>
+
+<QuickGrid Class="table" Items="context.Transaction">
+    <PropertyColumn Property="transaction => transaction.Amount" />
+    <PropertyColumn Property="transaction => transaction.TransactionDate" />
+    <PropertyColumn Property="transaction => transaction.TransactionType" />
+    <PropertyColumn Property="transaction => transaction.Description" />
+
+    <TemplateColumn Context="transaction">
+        <a href="@($"transactions/edit?transactionid={transaction.TransactionId}")">Edit</a> |
+        <a href="@($"transactions/details?transactionid={transaction.TransactionId}")">Details</a> |
+        <a href="@($"transactions/delete?transactionid={transaction.TransactionId}")">Delete</a>
+    </TemplateColumn>
+</QuickGrid>
+
+@code {
+    private ProjectContext context = default!;
+
+    protected override void OnInitialized()
+    {
+        context = DbFactory.CreateDbContext();
+    }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+}
