@@ -12,7 +12,7 @@ namespace Project.Configurations.Entities
             builder.HasData(
                 new Transaction
                 {
-                    TransactionId = 1,
+                    Id = 1,
                     Amount = 100,
                     TransactionDate = DateTime.Now,
                     TransactionType = "dinner",
@@ -20,7 +20,7 @@ namespace Project.Configurations.Entities
                 },
                 new Transaction
                 {
-                    TransactionId = 2,
+                    Id = 2,
                     Amount = 500,
                     TransactionDate = DateTime.Now,
                     TransactionType = "lunch",
